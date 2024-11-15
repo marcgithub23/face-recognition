@@ -9,39 +9,41 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import ParticlesBg from 'particles-bg';
 
-const { REACT_APP_CLARIFAI_PAT, REACT_APP_USER_ID, REACT_APP_APP_ID } = process.env
+// const { REACT_APP_CLARIFAI_PAT, REACT_APP_USER_ID, REACT_APP_APP_ID } = process.env
 
-const returnClarifaiRequestOptions = (imageUrl) => {
-  const PAT = REACT_APP_CLARIFAI_PAT;
-  const USER_ID = REACT_APP_USER_ID;       
-  const APP_ID = REACT_APP_APP_ID;
-  const IMAGE_URL = imageUrl;
+// const returnClarifaiRequestOptions = (imageUrl) => {
+//   const PAT = REACT_APP_CLARIFAI_PAT;
+//   const USER_ID = REACT_APP_USER_ID;       
+//   const APP_ID = REACT_APP_APP_ID;
+//   const IMAGE_URL = imageUrl;
 
-  const raw = JSON.stringify({
-    "user_app_id": {
-      "user_id": USER_ID,
-      "app_id": APP_ID
-    },
-    "inputs": [{
-      "data": {
-        "image": {
-          "url": IMAGE_URL
-        }
-      }
-    }]
-  });
+//   const raw = JSON.stringify({
+//     "user_app_id": {
+//       "user_id": USER_ID,
+//       "app_id": APP_ID
+//     },
+//     "inputs": [{
+//       "data": {
+//         "image": {
+//           "url": IMAGE_URL
+//         }
+//       }
+//     }]
+//   });
 
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Key ' + PAT
-    },
-    body: raw
-  };
+//   const requestOptions = {
+//     method: 'POST',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Authorization': 'Key ' + PAT
+//     },
+//     body: raw
+//   };
 
-  return requestOptions;
-}
+//   return requestOptions;
+// }
+
+// fetch("https://api.clarifai.com/v2/models/face-detection/outputs", returnClarifaiRequestOptions(this.state.input))
 
 const initialState = {
   input: '',
@@ -99,7 +101,13 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
 
-    fetch("https://api.clarifai.com/v2/models/face-detection/outputs", returnClarifaiRequestOptions(this.state.input))
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+          input: this.state.input
+        })
+    })
       .then(response => response.json())
       .then(data => {
         if (data) {
